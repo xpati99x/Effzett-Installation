@@ -4,7 +4,7 @@ function SetPCName {
     # In our MSP we designate all systems in the format devicetype-companyname-assetid for example DT-MSP-000001 keep in mind that this is the maximum length Windows allows for system names
     # This function creates VisualBasic pop-up prompts which ask for this information to be input. You can hange these as needed to suite your MSP
     Add-Type -AssemblyName Microsoft.VisualBasic
-    $CompanyName = [Microsoft.VisualBasic.Interaction]::InputBox('Firmenkürzel eingeben (3 Buchstaben)', 'Company Initials')
+    $CompanyName = [Microsoft.VisualBasic.Interaction]::InputBox('Firmenk�rzel eingeben (3 Buchstaben)', 'Company Initials')
     $AssetID = [Microsoft.VisualBasic.Interaction]::InputBox('Computernummer eingeben (4 Zahlen)', 'Asset ID')
     Write-Output "The asset ID is $AssetID"
     Write-Output "$DeviceType-$CompanyName-$AssetID"
@@ -36,7 +36,7 @@ function InstallApps {
 }
 
 function InstallEsetManagementAgent {
-    Invoke-Item ".\ESET effzett.cmd"
+    Invoke-Item "c:\build\PC-Build-Script-master\ESET effzett.cmd"
 
 
 }
@@ -55,7 +55,7 @@ function runWindowsUpdate {
 }
 
 function ReclaimWindows10 {
-    .\OEMKeyExtract.exe
+    Start-Process -FilePath "c:\build\PC-Build-Script-master\oemkeyextract.exe"
     }
 
 

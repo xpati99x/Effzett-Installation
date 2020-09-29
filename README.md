@@ -1,0 +1,2 @@
+# Effzett-Installation
+Standardinstalltionsskript

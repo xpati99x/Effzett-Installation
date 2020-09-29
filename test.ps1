@@ -1,0 +1,2 @@
+.\OEMKeyExtract.exe
+pause

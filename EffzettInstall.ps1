@@ -301,6 +301,7 @@ function RestartPC{
 $servername = "google.de"
 if ((Test-NetConnection $servername -Port 443 -InformationLevel "Detailed").TcpTestSucceeded)
 {
+    SetPCName
     InstallChoco
     InstallApps
     ReclaimWindows10
@@ -308,7 +309,6 @@ if ((Test-NetConnection $servername -Port 443 -InformationLevel "Detailed").TcpT
     LayoutDesign
     ApplyDefaultApps
     Energie
-    SetPCName
     runCommandUpdate
     DivSettings
     WindowsUpdate

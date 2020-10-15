@@ -282,13 +282,12 @@ function WindowsUpdate{
     Install-PackageProvider -name nuget -minimumversion 2.8.5.201 -force
     Install-Module PSWindowsUpdate -force
     Get-WindowsUpdate
-    Install-WindowsUpdate -acceptall -autoreboot
+    Install-WindowsUpdate -acceptall
 }
 
 function RestartPC{
-    Write-Host
-    Write-Host "Press any key to restart your system..." -ForegroundColor Black -BackgroundColor White
-    $key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    Write-Host "Neustart in 30 Sekunden"
+    timeout.exe 30
     Write-Host "Restarting..."
     Restart-Computer
 }
@@ -296,7 +295,7 @@ function RestartPC{
 
 
 
-#Internetverbindung �berpr�fen
+#Test internet connection - abort if fail
 $servername = "google.de"
 if ((Test-NetConnection $servername -Port 443 -InformationLevel "Detailed").TcpTestSucceeded)
 {

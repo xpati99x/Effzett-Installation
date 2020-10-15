@@ -1,10 +1,3 @@
-#Internetverbindung überprüfen
-$servername = "google.de"
-if (Test-Connection -ComputerName $servername -Quiet -eq "false") {
-    exit
-}
-
-Set-ExecutionPolicy remotesigned
 # Startvariablen setzen
 function SetPCName {
     Add-Type -AssemblyName Microsoft.VisualBasic
@@ -27,8 +20,6 @@ function InstallChoco {
     # Install Chocolatey to allow automated installation of packages  
     Set-ExecutionPolicy Bypass -Scope Process -Force; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
     }
-
-
 #Programminstallation
 function InstallApps {
     #AdobeReader, 7Zip, NewEdge, Chrome, Firefox + 
@@ -44,13 +35,11 @@ function InstallApps {
      choco install microsoft-office-deployment --params="'/Channel:Monthly /Language:MatchOS /Product:$OfficeVersion'" -y
      Invoke-Item "c:\build\PC-Build-Script-master\ESET effzett.cmd"
 }
-
 #Dell-Updates installieren
 function runCommandUpdate{
     & 'C:\Program Files (x86)\Dell\CommandUpdate\dcu-cli.exe' /applyUpdates
 
 }
-
 #Windows-Updates installieren
 function runWindowsUpdate {
     Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
@@ -59,12 +48,10 @@ function runWindowsUpdate {
     Install-WindowsUpdate
 
 }
-
 #OEM-Key auslesen
 function ReclaimWindows10 {
     Start-Process -FilePath "c:\build\PC-Build-Script-master\oemkeyextract.exe"
     }
-
 function DivSettings {
     # Disable Telemetry
     Write-Host "Disabling Telemetry..."
@@ -196,22 +183,9 @@ function DivSettings {
     Write-Host "Showing known file extensions..."
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "HideFileExt" -Type DWord -Value 0
 
-    # Show hidden files
-    #Write-Host "Showing hidden files..."
-    #Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "Hidden" -Type DWord -Value 1
-
-    ### HIER ###
-
-    # Hide hidden files
-    # Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "Hidden" -Type DWord -Value 2
-
     # Change default Explorer view to "Computer"
     Write-Host "Changing default Explorer view to `"Computer`"..."
     Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "LaunchTo" -Type DWord -Value 1
-
-    # Change default Explorer view to "Quick Access"
-    # Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "LaunchTo"
-
     #Show Computer shortcut on desktop
      Write-Host "Showing Computer shortcut on desktop..."
      If (!(Test-Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu")) {
@@ -220,8 +194,8 @@ function DivSettings {
      Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu" -Name "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" -Type DWord -Value 0
      Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel" -Name "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" -Type DWord -Value 0
     }
-
-     # Uninstall default Microsoft applications
+    # Uninstall default Microsoft applications
+function CleanWin10 {
     Write-Host "Uninstalling default Microsoft applications..."
     Get-AppxPackage "Microsoft.3DBuilder" | Remove-AppxPackage
     Get-AppxPackage "Microsoft.BingFinance" | Remove-AppxPackage
@@ -276,7 +250,7 @@ function DivSettings {
     Set-ItemProperty -Path "HKCR:\Applications\photoviewer.dll\shell\open" -Name "MuiVerb" -Type String -Value "@photoviewer.dll,-3043"
     Set-ItemProperty -Path "HKCR:\Applications\photoviewer.dll\shell\open\command" -Name "(Default)" -Type ExpandString -Value "%SystemRoot%\System32\rundll32.exe `"%ProgramFiles%\Windows Photo Viewer\PhotoViewer.dll`", ImageView_Fullscreen %1"
     Set-ItemProperty -Path "HKCR:\Applications\photoviewer.dll\shell\open\DropTarget" -Name "Clsid" -Type String -Value "{FFE2A43C-56B9-4bf5-9A79-CC6D4285608A}"
-
+}
 # Uploads a default layout to all NEW users that log into the system. Effects task bar and start menu
 function LayoutDesign {
     If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")) {
@@ -285,12 +259,11 @@ function LayoutDesign {
     }
     Import-StartLayout -LayoutPath "c:\build\PC-Build-Script-master\LayoutModification.xml" -MountPath $env:SystemDrive\
     }
-    
+
 function ApplyDefaultApps {
     dism /online /Import-DefaultAppAssociations:c:\build\PC-Build-Script-master\AppAssociations.xml
 }
 
-# Custom power profile used for our customers. Ensures systems do not go to sleep.
 function Energie {
     POWERCFG -DUPLICATESCHEME 381b4222-f694-41f0-9685-ff5bb260df2e 381b4222-f694-41f0-9685-ff5bb260aaaa
     POWERCFG -CHANGENAME 381b4222-f694-41f0-9685-ff5bb260aaaa "effzett Energiesparplan"
@@ -313,7 +286,6 @@ function WindowsUpdate{
 }
 
 function RestartPC{
-        # Restart #
     Write-Host
     Write-Host "Press any key to restart your system..." -ForegroundColor Black -BackgroundColor White
     $key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
@@ -321,14 +293,28 @@ function RestartPC{
     Restart-Computer
 }
 
-InstallChoco
-InstallApps
-ReclaimWindows10
-LayoutDesign
-ApplyDefaultApps
-Energie
-SetPCName
-runCommandUpdate
-DivSettings
-WindowsUpdate
-RestartPC
+
+
+
+#Internetverbindung überprüfen
+$servername = "google.de"
+if (((Test-NetConnection www.google.com -Port 443 -InformationLevel "Detailed").TcpTestSucceeded) -eq $false)
+{
+    InstallChoco
+    InstallApps
+    ReclaimWindows10
+    CleanWin10
+    LayoutDesign
+    ApplyDefaultApps
+    Energie
+    SetPCName
+    runCommandUpdate
+    DivSettings
+    WindowsUpdate
+    RestartPC
+}
+else {
+    pause
+    Write-Host "Keine Internetverbindung"
+    exit
+}

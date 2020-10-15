@@ -297,7 +297,7 @@ function RestartPC{
 
 
 
-#Test internet connection - abort if fail
+#Test internet connection - abort if fail.
 $servername = "google.de"
 if ((Test-NetConnection $servername -Port 443 -InformationLevel "Detailed").TcpTestSucceeded)
 {

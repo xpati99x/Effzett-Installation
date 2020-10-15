@@ -294,8 +294,9 @@ function RestartPC{
     Restart-Computer
 }
 
-
-
+#############################################
+#              ACTUAL SCRIPT                #
+#############################################
 
 #Test internet connection - abort if fail.
 $servername = "google.de"

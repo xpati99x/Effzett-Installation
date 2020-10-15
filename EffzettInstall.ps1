@@ -298,7 +298,7 @@ function RestartPC{
 
 #Internetverbindung �berpr�fen
 $servername = "google.de"
-if (((Test-NetConnection www.google.com -Port 443 -InformationLevel "Detailed").TcpTestSucceeded) -eq $false)
+if ((Test-NetConnection $servername -Port 443 -InformationLevel "Detailed").TcpTestSucceeded)
 {
     InstallChoco
     InstallApps
@@ -316,6 +316,5 @@ if (((Test-NetConnection www.google.com -Port 443 -InformationLevel "Detailed").
 else {
     Write-Host "Keine Internetverbindung"
     pause
-    Write-Host "Keine Internetverbindung"
     exit
 }

@@ -4,11 +4,11 @@ function SetPCName {
     #Rechnername setzen
     $ComputerName = [Microsoft.VisualBasic.Interaction]::InputBox('Computername eingeben:','Name')
     Write-Output "Der Computername ist $ComputerName"
-    Rename-Computer -NewName "WN10$CompanyName$AssetID"
+    Rename-Computer -NewName $ComputerName
     #Hersteller herausfinden
-    $computerSystem = (Get-WmiObject -Class:Win32_ComputerSystem)
+    $global:computerSystem = (Get-WmiObject -Class:Win32_ComputerSystem)
     #Officeversion abfragen
-    $OfficeVersion = [Microsoft.VisualBasic.Interaction]::InputBox('Office Version: HB,365 oder none','Office Version')
+    $global:OfficeVersion = [Microsoft.VisualBasic.Interaction]::InputBox('Office Version: HB,365 oder none','Office Version')
 }
 #Chocolatey installieren
 function InstallChoco {
@@ -22,16 +22,18 @@ function InstallChoco {
     }
 #Programminstallation
 function InstallApps {
-    #AdobeReader, 7Zip, NewEdge, Chrome, Firefox + 
+    #AdobeReader, 7Zip, NewEdge, Chrome, Firefox
     choco install adobereader 7zip microsoft-edge firefox googlechrome -y
     choco install eset-antivirus --version 7.3.1 -y --ignorechecksum
     if ($computerSystem -like "*Dell*") {
             choco install dellcommandupdate -y
     }
-    #Gew�hlte Office-Version installieren
+    #Gewaehlte Office-Version installieren
      if ($OfficeVersion -eq "HB"){Set-Variable -Name "OfficeVersion" -Value "HomeBusiness2019Retail"}
      elseif ($OfficeVersion -eq "365"){Set-Variable -Name "OfficeVersion" -Value "O365BusinessRetail"}
-     elseif ($OfficeVersion -eq "none") {return}
+     else {
+        return    
+     }
      choco install microsoft-office-deployment --params="'/Channel:Monthly /Language:MatchOS /Product:$OfficeVersion'" -y
      Invoke-Item "c:\build\PC-Build-Script-master\ESET effzett.cmd"
 }

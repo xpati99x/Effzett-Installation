@@ -28,7 +28,7 @@ function InstallApps {
     if ($computerSystem -like "*Dell*") {
             choco install dellcommandupdate -y
     }
-    #Gewählte Office-Version installieren
+    #Gewï¿½hlte Office-Version installieren
      if ($OfficeVersion -eq "HB"){Set-Variable -Name "OfficeVersion" -Value "HomeBusiness2019Retail"}
      elseif ($OfficeVersion -eq "365"){Set-Variable -Name "OfficeVersion" -Value "O365BusinessRetail"}
      elseif ($OfficeVersion -eq "none") {return}
@@ -296,7 +296,7 @@ function RestartPC{
 
 
 
-#Internetverbindung überprüfen
+#Internetverbindung ï¿½berprï¿½fen
 $servername = "google.de"
 if (((Test-NetConnection www.google.com -Port 443 -InformationLevel "Detailed").TcpTestSucceeded) -eq $false)
 {
@@ -314,6 +314,7 @@ if (((Test-NetConnection www.google.com -Port 443 -InformationLevel "Detailed").
     RestartPC
 }
 else {
+    Write-Host "Keine Internetverbindung"
     pause
     Write-Host "Keine Internetverbindung"
     exit

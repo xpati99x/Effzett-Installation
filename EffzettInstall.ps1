@@ -25,7 +25,7 @@ function InstallApps {
     #AdobeReader, 7Zip, NewEdge, Chrome, Firefox
     choco install adobereader 7zip microsoft-edge firefox googlechrome -y
     choco install eset-antivirus --version 7.3.1 -y --ignorechecksum
-    if ($computerSystem -like "*Dell*") {
+    if ($computerSystem.Manufacturer -like "*Dell*") {
             choco install dellcommandupdate -y
     }
     #Gewaehlte Office-Version installieren
@@ -39,8 +39,9 @@ function InstallApps {
 }
 #Dell-Updates installieren
 function runCommandUpdate{
-    & 'C:\Program Files (x86)\Dell\CommandUpdate\dcu-cli.exe' /applyUpdates
-
+    if ($computerSystem.Manufacturer -like "*Dell*") {
+        & 'C:\Program Files (x86)\Dell\CommandUpdate\dcu-cli.exe' /applyUpdates
+    }
 }
 #Windows-Updates installieren
 function runWindowsUpdate {
